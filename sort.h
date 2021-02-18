@@ -1,3 +1,9 @@
+#ifndef _STDLIB_H_
+#define _STDLIB_H_
+
+#include <stdlib.h>
+
+#endif
 typedef struct _Range {
     int start, end;
 } Range;

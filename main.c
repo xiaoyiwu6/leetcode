@@ -4,6 +4,13 @@
 #include <string.h>
 #include <stdarg.h>
 #include "replaceSpace.h"
+#include "linkList.h"
+#ifndef _STDLIB_H_
+#define _STDLIB_H_
+
+#include <stdlib.h>
+
+#endif
 
 
 typedef int (*fun_ptr)(int,int); 
@@ -74,7 +81,36 @@ int demo(char *msg, ... )
     return 0;  
 }
 
+/**完美乘法，a*b=c,abc 中只出现 0~9 的数字，且每个数字在这个等式中只出现 一遍。*/
+void perfectMultiple(){
+    int count=0;//记录符合条件的式子数
+    int i,j,k,y,t,key;//迭代用
+    int digit[10];//0-9数字计数数组
+    int x[3];//记录abc的值
 
+    //a和b的值的循环
+    for(i=1; i<99;i++){
+        for(j=102; j<9876; j++){
+            //置零digit
+            for(k=0;k<10;k++) digit[k] = 0;
+            //分析0-9数字出现次数
+            x[0] = i; x[1] = j; x[2] = i*j;
+            for(k=0;k<3;k++){
+                y = x[k];
+                while (y)
+                {
+                    t = y%10;
+                    digit[t]++;
+                    y /= 10;
+                }
+            }
+            //判断符合完美乘法,打印输出
+            key = 0;
+            for(k=0;k<10;k++)if(digit[k]!=1)key++;
+            if(key == 0) printf("[%2d]%d * %d = %d\n",++count,i,j,i*j);
+        }
+    }
+}
 
 int main(int argc, char const *argv[])
 {
@@ -128,7 +164,18 @@ int main(int argc, char const *argv[])
     //     fclose (pf);
     // }
 
-    demo("DEMO", "This", "is", "a", "demo!" ,"333333", "/0");  
-
+    // demo("DEMO", "This", "is", "a", "demo!" ,"333333", "/0");  
+    MyLinkedList* obj = myLinkedListCreate();
+    myLinkedListAddAtHead(obj, 7);
+    myLinkedListAddAtHead(obj, 2);
+    myLinkedListAddAtHead(obj, 1);
+    myLinkedListAddAtIndex(obj,3,0);
+    myLinkedListDeleteAtIndex(obj,2);
+    myLinkedListAddAtHead(obj, 6);
+    myLinkedListAddAtTail(obj, 1);
+    int param_1 = myLinkedListGet(obj,0);
+    myLinkedListAddAtHead(obj,4);
+    myLinkedListAddAtIndex(obj,5,0);
+    myLinkedListAddAtHead(obj,6);
     return 0;
 }
