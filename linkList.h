@@ -19,3 +19,5 @@ void myLinkedListDeleteAtIndex(MyLinkedList* obj, int index);//Delete the index-
 void myLinkedListFree(MyLinkedList* obj);//free
 void myLinkedListSelectionSort(MyLinkedList* obj); //Select sort the list.
 int myLinkedListLength(MyLinkedList* obj); //Return the length of list.
+void myLinkedListDeleteMin(MyLinkedList* obj); //Delete the node with min value.
+MyLinkedList* myLinkedListMerge(MyLinkedList* La, MyLinkedList* Lb);//Merge two ascending ordered lists into a descending ordered list

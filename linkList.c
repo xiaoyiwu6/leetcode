@@ -99,16 +99,15 @@ MyLinkedList* selectMinNode(MyLinkedList* obj){
     if(obj->next==NULL) return NULL;//达到末尾，排序完毕，返回NULL
     MyLinkedList* preMin = obj; //最小前置指针
     MyLinkedList* min = obj->next; //最小指针
+    MyLinkedList* pre = obj; //当前指针的前置指针
 
-    obj = obj->next;//指向第一个节点值
     //找到最小节点及其前置指针
-    while (obj->next != NULL)
+    while (pre->next)
     {
-        if(obj->next->val < min->val){
-            min = obj->next;//比较取小
-            preMin = obj;//记录前置
-        } 
-        obj = obj->next;
+        if(pre->next->val<min->val){
+            preMin = pre; min = pre->next;
+        }
+        pre = pre->next;
     }
     preMin->next = min->next; //将min摘出，使preMin指向min后置
     return min;
@@ -122,4 +121,58 @@ int myLinkedListLength(MyLinkedList* obj){
         length++;
     }
     return length;
+}
+
+/**编写一个函数，删除链表中的最小值。（结点 node 由整型 data 和节点指针 next 构成）*/
+void myLinkedListDeleteMin(MyLinkedList* obj){
+    if(obj->next==NULL) return;
+    MyLinkedList* preMin = obj; //最小前置指针
+    MyLinkedList* min = obj->next; //最小指针
+    MyLinkedList* pre = obj; //当前指针的前置指针
+    while(pre->next){
+        if(pre->next->val<min->val){
+            preMin = pre; min = pre->next;
+        }
+        pre = pre->next;
+    }
+    preMin->next = min->next;
+    free(min);
+}
+
+/**两个递增有序整数数列链表 La 和 Lb，将他们合并后，变成一个新的链表，要 求该链表递减排序。*/
+MyLinkedList* myLinkedListMerge(MyLinkedList* La, MyLinkedList* Lb){
+    MyLinkedList* head = (MyLinkedList*)malloc(sizeof(MyLinkedList));
+    head->val = -1; head->next = NULL;
+    MyLinkedList *curA = La->next, *curB = Lb->next;//分别指向两个列表的第一个节点
+    MyLinkedList *tmp=NULL;
+
+    //采用头插法，把小的优先插入
+    while(curA && curB){
+        if(curA->val < curB->val){
+            tmp = curA->next;
+            curA->next = head->next;
+            head->next = curA;
+            curA = tmp;
+        } 
+        else {
+            tmp = curB->next;
+            curB->next = head->next;
+            head->next = curB;
+            curB = tmp;
+        }
+    }
+    while(curA){
+        tmp = curA->next;
+        curA->next = head->next;
+        head->next = curA;
+        curA = tmp;    
+    }
+    while(curB){
+        tmp = curB->next;
+        curB->next = head->next;
+        head->next = curB;
+        curB = tmp;
+    }
+    free(La);free(Lb);
+    return head;
 }
