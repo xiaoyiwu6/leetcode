@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <ctype.h>
+#include <math.h>
 
 /**快速排序*/
 void quick_sort(int arr[], int start, int end){
@@ -345,4 +346,116 @@ void print_pyramid(int n){
         for(j=0;j<blank;j++) printf(" ");
         for(j=0;j<symbal;j++) printf("*");
     }
+}
+
+/**找出一个 2 维数组中的鞍点，即该位置上的元素在该行上最大、在该列上最 小。*/
+void find_saddle_point(int *arr[], int m, int n){
+    int count[m][n]; memset(count,0,sizeof(count));
+    int i,j;
+    int max,min;//用于得出每行每列最大最小的下标
+
+    //行
+    for(i=0;i<m;i++){
+        max = 0;
+        //找到每行最大值的下标
+        for(j=1;j<n;j++) if(arr[i][j]>arr[i][max]) max = j;
+        count[i][max]++;
+    }
+    //列
+    for(j=0;j<n;j++){
+        min=0;
+        //找到每列最小值的下标
+        for(i=1;i<m;i++) if(arr[i][j]<arr[min][j]) min = i;
+        count[min][j]++;
+    }
+    //打印鞍点
+    for ( i = 0; i < m; i++) for ( j = 0; j < n; j++) if(count[i][j]==2) printf("arr[%d][%d] = %d\n",i,j,arr[i][j]);    
+}
+
+/**设计候选人得票统计程序，要求有 4 个侯选人（分别是 Zhang 、Wang 、Li、 Zhao），选民每次输入一个被选人的姓名，最后统计出各人的得票结果*/
+//省略变量名，这里不能用typedef，因为下面命名了数组并且赋值了，不能把一个参数重定义为一个值
+struct{
+    char name[20];
+    int vote;
+}candidate[4]={"Zhang",0,"Wang",0,"Li",0,"Zhao",0};
+
+void vote(){
+    int i,max=0;
+    char can_name[20]="";
+    //输入stop时表示结束
+    while(!strcmp(can_name,"stop"))
+    {
+        gets(can_name);
+        for(i=0;i<4;i++) if(!strcmp(can_name,candidate[i].name)) candidate[i].vote++;
+    }
+    for(i=1;i<4;i++) if(candidate[i].vote>candidate[max].vote) max = i;
+    printf("Winner: %s",candidate[max].name);
+}
+
+/**定义一个结构体变量（包括年、月、日）。计算当天是本年中的第几天，注 
+ * 意闰年问题。*/
+typedef struct{
+    int year;
+    int month;
+    int day;
+}Date;
+//闰年：1、能够被4整除不能被100整除 2、能被400整除
+int is_leap_year(int year){
+    return ((year%4==0 && year%100) || year%400==0);
+}
+//判断第几天
+int date2count(Date date){
+    int months[12] = {31,28,31,30,31,30,31,31,30,31,30,31};
+    int count=0;
+
+    for(int i=0;i<date.month-2;i++) count+=months[i];//当前月不能算入
+    if(date.month>2 && is_leap_year(date.year)) count++;//闰年且大于2月份加一
+    count+=date.day;//加上当前月的日数
+    
+    return count;
+}
+
+/**用选择法实现对10个整数按从小到大的顺序排序输出（要求用指针实现）。*/
+//整数型交换
+void swap(int *a, int *b){
+    int tmp = *a;
+    *a = *b;
+    *b = tmp;
+}
+
+//选择排序
+void selection_sort(int arr[], int n){
+    int i,j,min;
+    for(i=0;i<n-1;i++){
+        min = i;
+        //每一轮对剩下数组进行选择排序
+        for(j=i+1;j<n;j++)  if(arr[j]<arr[min]) min = j;
+        swap(arr[i], arr[min]);
+    }
+}
+
+/**用冒泡法实现对 10 个整数按从大到小的顺序排序输出（要求用指针实现）。*/
+//冒泡排序
+void bubble_sort(int arr[], int n){
+    int i,j;
+
+    for(i=0;i<n-1;i++)
+        for(j=i;j<n-1;j++)  
+            if(arr[j]>arr[j+1])     
+                swap(arr[j],arr[j+1]);
+}
+
+//辗转相除法求最小公倍数和最大公约数
+int gcd(int a, int b){
+    return b?gcd(b,a%10):a;
+}
+int common(int a,int b){
+    return a*b/gcd(a,b);
+}
+
+/**求 5+55+555+5555+55555 的值。（拓展输入一个数 a，求 a+ aa + aaa + aaaa + aaaaa）*/
+int mutiple_plus(int a){
+    int count=0,i;
+    for (i = 1; i <= a; i++) count += i*a*pow(10,a-i);
+    return count;
 }
