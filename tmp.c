@@ -1,6 +1,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <ctype.h>
 
 /**快速排序*/
 void quick_sort(int arr[], int start, int end){
@@ -293,4 +294,55 @@ int partition(int arr[],int n){
     }
     arr[low] = pivot;
     return low;
+}
+
+/**有 n 个人围成一圈，顺序排号。从第一个人开始报数（从 1 到 3 报数），凡 
+ * +报到 3 的人退出圈子，问最后留下来的是原来第几号的那位（要求用指针知识实 现）。*/
+int lastRemaining(int n, int m){
+    if(n==1) return 0;//只剩下一个数字，返回其坐标0
+    int x = lastRemaining(n-1,m);
+    return (m+x)%n;
+}
+//非递归版本
+int f(int n, int m){
+    int x=0,i;
+    for(i=2;i<=n;i++) x = (m+x)%i;
+    return x;
+}
+
+/**有一行电文，已按下面规律译成密码： 
+ * A→Z a→z 
+ * B→Y b→y 
+ * C→X c→x 
+ * 即第 1 个字母变成第 26 个字母，第 i 个字母变成第（26 – i + 1）个字母。非 
+ * 字母符号不变。要求编程序将密码译回原文，并输出密码和原文。*/
+void transfer(char *cipher_char){
+    char base;
+    // if(isupper(*cipher_char)) base = 'A';
+    // if(islower(*cipher_char)) base = 'a';
+    if(*cipher_char>='A' && *cipher_char<='Z')  base = 'A';
+    else if(*cipher_char>='a' && *cipher_char<='z')  base = 'a';
+    else return ;
+
+     *cipher_char = 25-(*cipher_char-base) + base;
+}
+
+/**输出金字塔图案*/
+void print_pyramid(int n){
+    int i,j;
+    int blank,symbal;//空白数和符号数,空白数只需要打印前半部分所以是一半
+    //打印上层
+    for(i=1;i<=n;i++){
+        symbal = 2*i-1;//每层符号数和层数的关系为2h-1：1、3、5、7、9
+        blank = n-i;
+        for(j=0;j<blank;j++) printf(" ");
+        for(j=0;j<symbal;j++) printf("*");
+    }
+    //打印下层,反过来打印即可，注意少打印一层
+    for(i=n-1;i;i++){
+        symbal = 2*i-1;//每层符号数和层数的关系为2h-1：1、3、5、7、9
+        blank = n-i;
+        for(j=0;j<blank;j++) printf(" ");
+        for(j=0;j<symbal;j++) printf("*");
+    }
 }
