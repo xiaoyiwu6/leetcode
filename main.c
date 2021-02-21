@@ -165,17 +165,17 @@ int main(int argc, char const *argv[])
     // }
 
     // demo("DEMO", "This", "is", "a", "demo!" ,"333333", "/0");  
-    MyLinkedList* obj = myLinkedListCreate();
-    myLinkedListAddAtHead(obj, 7);
-    myLinkedListAddAtHead(obj, 2);
-    myLinkedListAddAtHead(obj, 1);
-    myLinkedListAddAtIndex(obj,3,0);
-    myLinkedListDeleteAtIndex(obj,2);
-    myLinkedListAddAtHead(obj, 6);
-    myLinkedListAddAtTail(obj, 1);
-    int param_1 = myLinkedListGet(obj,0);
-    myLinkedListAddAtHead(obj,4);
-    myLinkedListAddAtIndex(obj,5,0);
-    myLinkedListAddAtHead(obj,6);
+    // MyLinkedList* obj = myLinkedListCreate();
+    // myLinkedListAddAtHead(obj, 7);
+    // myLinkedListAddAtHead(obj, 2);
+    // myLinkedListAddAtHead(obj, 1);
+    // myLinkedListAddAtIndex(obj,3,0);
+    // myLinkedListDeleteAtIndex(obj,2);
+    // myLinkedListAddAtHead(obj, 6);
+    // myLinkedListAddAtTail(obj, 1);
+    // int param_1 = myLinkedListGet(obj,0);
+    // myLinkedListAddAtHead(obj,4);
+    // myLinkedListAddAtIndex(obj,5,0);
+    // myLinkedListAddAtHead(obj,6);
     return 0;
 }
