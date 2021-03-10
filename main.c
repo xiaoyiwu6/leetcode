@@ -112,6 +112,49 @@ void perfectMultiple(){
     }
 }
 
+/**汉诺塔*/
+//a,b,c分别代表三个柱，该函数的意义在于借助b柱将n个盘从a柱移动到c柱
+void move(int n,int a, int b, int c){
+    if(n==1) printf("%c->%c\n",a,c);
+    else{
+        move(n-1,a,c,b);
+        printf("%c->%c\n",a,c);
+        move(n-1,b,a,c);
+    }
+}
+void Hanoi(int n){
+    move(n,'a','b','c');
+}
+
+void swap(char** pa, char** pb) {char* temp; temp=*pa; *pa=*pb; *pb=temp; }
+
+
+struct TreeNode {
+      int val;
+      struct TreeNode *left;
+      struct TreeNode *right;
+  };
+
+
+struct TreeNode* buildTree(int* preorder, int preorderSize, int* inorder, int inorderSize){
+    if(preorderSize==0) return NULL;
+    struct TreeNode* node = (struct TreeNode*)malloc(sizeof(struct TreeNode));
+    node->val = *preorder;
+    int llen,rlen;//计算左右子树序列长度
+    for(llen=0;llen<inorderSize&&inorder[llen]!=*preorder;llen++);
+    rlen = inorderSize-1-llen;
+    node->left =  buildTree(preorder+1,llen,inorder,llen);
+    node->right = buildTree(preorder+1+llen,rlen,inorder+1+llen,rlen);
+    return node;
+}
+void preorder_display(struct TreeNode* node){
+    if(node!=NULL){
+        printf("%d ",node->val);
+        preorder_display(node->left);
+        preorder_display(node->right);
+    }
+}
+
 int main(int argc, char const *argv[])
 {
     /* 函数调用 */
@@ -165,17 +208,23 @@ int main(int argc, char const *argv[])
     // }
 
     // demo("DEMO", "This", "is", "a", "demo!" ,"333333", "/0");  
-    MyLinkedList* obj = myLinkedListCreate();
-    myLinkedListAddAtHead(obj, 7);
-    myLinkedListAddAtHead(obj, 2);
-    myLinkedListAddAtHead(obj, 1);
-    myLinkedListAddAtIndex(obj,3,0);
-    myLinkedListDeleteAtIndex(obj,2);
-    myLinkedListAddAtHead(obj, 6);
-    myLinkedListAddAtTail(obj, 1);
-    int param_1 = myLinkedListGet(obj,0);
-    myLinkedListAddAtHead(obj,4);
-    myLinkedListAddAtIndex(obj,5,0);
-    myLinkedListAddAtHead(obj,6);
+    // MyLinkedList* obj = myLinkedListCreate();
+    // myLinkedListAddAtHead(obj, 7);
+    // myLinkedListAddAtHead(obj, 2);
+    // myLinkedListAddAtHead(obj, 1);
+    // myLinkedListAddAtIndex(obj,3,0);
+    // myLinkedListDeleteAtIndex(obj,2);
+    // myLinkedListAddAtHead(obj, 6);
+    // myLinkedListAddAtTail(obj, 1);
+    // int param_1 = myLinkedListGet(obj,0);
+    // myLinkedListAddAtHead(obj,4);
+    // myLinkedListAddAtIndex(obj,5,0);
+    // myLinkedListAddAtHead(obj,6);
+    // Hanoi(1);  
+    int preorder[] = {3,9,20,15,7};
+    int inorder[] = {9,3,15,20,7};
+    struct TreeNode* tree = buildTree(preorder,5,inorder,5);
+    preorder_display(tree);
+
     return 0;
 }
