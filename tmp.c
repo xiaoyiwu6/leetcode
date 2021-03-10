@@ -459,3 +459,17 @@ int mutiple_plus(int a){
     for (i = 1; i <= a; i++) count += i*a*pow(10,a-i);
     return count;
 }
+
+/**大概的意思就是输入一个字符串，将连续相同的字符删减为一个，以“*”结尾*/
+void deduplication(){
+    char old_char,new_char;
+    old_char = '*';
+  
+    do{
+        scanf("%c",&new_char);
+        if(new_char == old_char) continue;
+        old_char = new_char;
+        printf("%c",old_char);
+    }while(new_char!='*');
+    
+}
