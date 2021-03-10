@@ -220,11 +220,5 @@ int main(int argc, char const *argv[])
     // myLinkedListAddAtHead(obj,4);
     // myLinkedListAddAtIndex(obj,5,0);
     // myLinkedListAddAtHead(obj,6);
-    // Hanoi(1);  
-    int preorder[] = {3,9,20,15,7};
-    int inorder[] = {9,3,15,20,7};
-    struct TreeNode* tree = buildTree(preorder,5,inorder,5);
-    preorder_display(tree);
-
     return 0;
 }

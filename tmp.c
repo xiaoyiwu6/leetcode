@@ -1,6 +1,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <ctype.h>
+#include <math.h>
 
 /**快速排序*/
 void quick_sort(int arr[], int start, int end){
@@ -295,211 +297,165 @@ int partition(int arr[],int n){
     return low;
 }
 
-/**编程求 exp-x，x,n 键盘输入。（保研题附加题）*/
-float exp_minus_x(int x, int n){
-    float tmp = 1.0;
-    float sum = tmp;
-
-    for(int i=1;i<=n;i++){
-        tmp = -tmp*x/i;
-        sum += tmp;
-    }
-    return sum;
+/**有 n 个人围成一圈，顺序排号。从第一个人开始报数（从 1 到 3 报数），凡 
+ * +报到 3 的人退出圈子，问最后留下来的是原来第几号的那位（要求用指针知识实 现）。*/
+int lastRemaining(int n, int m){
+    if(n==1) return 0;//只剩下一个数字，返回其坐标0
+    int x = lastRemaining(n-1,m);
+    return (m+x)%n;
+}
+//非递归版本
+int f(int n, int m){
+    int x=0,i;
+    for(i=2;i<=n;i++) x = (m+x)%i;
+    return x;
 }
 
-/**将输入的一个数质因分解，如 Input 90，Print:90=2*3*3*5.（保研题附加题）*/
-void prime_factorization(int num){
-    int i,j,k;
-    //从最小的质数开始循环，出现符合的质因数时num会除以该数发生变化，每次除以质因数后，质因数的倍数就不会符合条件，因此这里只需从最小的质因数开始循环即可，不需要后面的数也是质数
-    for(i=2;i<=num;i++){
-        //为了打印方便这里while条件选择num!=i
-        while(num!=i){
-            //质因数判断
-            if(num%i==0){
-                printf("%d*",i);
-                num/=i;
-            }else break;
-        }
-    }
-    printf("%d",num);
+/**有一行电文，已按下面规律译成密码： 
+ * A→Z a→z 
+ * B→Y b→y 
+ * C→X c→x 
+ * 即第 1 个字母变成第 26 个字母，第 i 个字母变成第（26 – i + 1）个字母。非 
+ * 字母符号不变。要求编程序将密码译回原文，并输出密码和原文。*/
+void transfer(char *cipher_char){
+    char base;
+    // if(isupper(*cipher_char)) base = 'A';
+    // if(islower(*cipher_char)) base = 'a';
+    if(*cipher_char>='A' && *cipher_char<='Z')  base = 'A';
+    else if(*cipher_char>='a' && *cipher_char<='z')  base = 'a';
+    else return ;
+
+     *cipher_char = 25-(*cipher_char-base) + base;
 }
 
-
-/**编写一个完整的程序，使之能完成以下功能：一段名为 file.c 的程序，该程序 中含有括号，现要检查程序中的括号是否配对，提示：利用堆栈实现。*/
-int check(){
-    FILE *pf;
-    if(!(pf = fopen("file.c","r"))) printf("failed.");
-    char p[MAX]; int cur=-1;//栈高度,-1表示栈空
-    char tmp;
-    //读取字符知道文件尾
-    while (!feof(pf)){
-        tmp = fgetc(pf);
-        if(tmp == '{' || tmp == '[' || tmp == '(')
-            p[++cur] = tmp;
-        else if (tmp == '}' || tmp == ']' || tmp ==')'){
-            //栈空或者弹出不匹配时则返回-1，表示不配对
-            if(cur<0 || !judge(p[cur--],tmp)) return -1;
-        }
+/**输出金字塔图案*/
+void print_pyramid(int n){
+    int i,j;
+    int blank,symbal;//空白数和符号数,空白数只需要打印前半部分所以是一半
+    //打印上层
+    for(i=1;i<=n;i++){
+        symbal = 2*i-1;//每层符号数和层数的关系为2h-1：1、3、5、7、9
+        blank = n-i;
+        for(j=0;j<blank;j++) printf(" ");
+        for(j=0;j<symbal;j++) printf("*");
     }
-    //栈空则配对成功
-    return cur==-1;
+    //打印下层,反过来打印即可，注意少打印一层
+    for(i=n-1;i;i++){
+        symbal = 2*i-1;//每层符号数和层数的关系为2h-1：1、3、5、7、9
+        blank = n-i;
+        for(j=0;j<blank;j++) printf(" ");
+        for(j=0;j<symbal;j++) printf("*");
+    }
 }
-//判断是否匹配，匹配返回1，不匹配返回0
-int judge(char left, char right){
-    switch (left)
+
+/**找出一个 2 维数组中的鞍点，即该位置上的元素在该行上最大、在该列上最 小。*/
+void find_saddle_point(int *arr[], int m, int n){
+    int count[m][n]; memset(count,0,sizeof(count));
+    int i,j;
+    int max,min;//用于得出每行每列最大最小的下标
+
+    //行
+    for(i=0;i<m;i++){
+        max = 0;
+        //找到每行最大值的下标
+        for(j=1;j<n;j++) if(arr[i][j]>arr[i][max]) max = j;
+        count[i][max]++;
+    }
+    //列
+    for(j=0;j<n;j++){
+        min=0;
+        //找到每列最小值的下标
+        for(i=1;i<m;i++) if(arr[i][j]<arr[min][j]) min = i;
+        count[min][j]++;
+    }
+    //打印鞍点
+    for ( i = 0; i < m; i++) for ( j = 0; j < n; j++) if(count[i][j]==2) printf("arr[%d][%d] = %d\n",i,j,arr[i][j]);    
+}
+
+/**设计候选人得票统计程序，要求有 4 个侯选人（分别是 Zhang 、Wang 、Li、 Zhao），选民每次输入一个被选人的姓名，最后统计出各人的得票结果*/
+//省略变量名，这里不能用typedef，因为下面命名了数组并且赋值了，不能把一个参数重定义为一个值
+struct{
+    char name[20];
+    int vote;
+}candidate[4]={"Zhang",0,"Wang",0,"Li",0,"Zhao",0};
+
+void vote(){
+    int i,max=0;
+    char can_name[20]="";
+    //输入stop时表示结束
+    while(!strcmp(can_name,"stop"))
     {
-    case '(':
-        return right==')';
-        break;
-    case '{':
-        return right=='}';
-        break;
-    case '[':
-        return right==']';
-        break;
-    default:
-        return 0;
+        gets(can_name);
+        for(i=0;i<4;i++) if(!strcmp(can_name,candidate[i].name)) candidate[i].vote++;
     }
+    for(i=1;i<4;i++) if(candidate[i].vote>candidate[max].vote) max = i;
+    printf("Winner: %s",candidate[max].name);
 }
 
-/**编写一个函数，使之能完成以下功能：把 file1.doc 的内容全部复制到 file2.doc 中，
- * file1.doc 中全部是字符(含空格)，要求复制时，在 file2.doc 中的每一行都要 加上行号，
- * 例如：行号*(其中“*”表示具体的数字)。最后该函数返回 file1.doc 中的字符个数(不包括空格)。
- * */
-int cpy_file(){
-    FILE *fp1,*fp2; char ch; int row=0; int count=0;
-    if(!(fp1=fopen("file1.doc","r")) || !(fp2=fopen("file2.doc","a+")))//a+表示从文件末尾开始写，不覆盖
-        return -1;
+/**定义一个结构体变量（包括年、月、日）。计算当天是本年中的第几天，注 
+ * 意闰年问题。*/
+typedef struct{
+    int year;
+    int month;
+    int day;
+}Date;
+//闰年：1、能够被4整除不能被100整除 2、能被400整除
+int is_leap_year(int year){
+    return ((year%4==0 && year%100) || year%400==0);
+}
+//判断第几天
+int date2count(Date date){
+    int months[12] = {31,28,31,30,31,30,31,31,30,31,30,31};
+    int count=0;
 
-    while(!feof(fp1)){
-        ch = getc(fp1);//从fp1读取
-        if(ch == '\n')
-            printf("行号%d", row++);
-        putc(ch, fp2);//复制到fp2
-        if(ch!=' ' || ch!='\n') count++;
-    }
-    fclose(fp1);fclose(fp2);
+    for(int i=0;i<date.month-2;i++) count+=months[i];//当前月不能算入
+    if(date.month>2 && is_leap_year(date.year)) count++;//闰年且大于2月份加一
+    count+=date.day;//加上当前月的日数
+    
     return count;
 }
 
-/**编写一个函数，使之能完成以下功能：利用递归方法找出一个数组中的最大 值和最小值，要求递归调用函数的格式如下：
- *  MinMaxValue(arr,n,&max,&min)，其中 arr 是给定的数组，n 是数组的个数，max、 min 分别是最大值和最小值。*/
-void MinMaxValue(int arr[], int n, int *max, int *min){
-    if(n==0) return;
-    if(arr[n-1]>*max) *max = arr[n-1];
-    if(arr[n-1]<*min) *min = arr[n-1];
-    MinMaxValue(arr,n-1,max,min);
+/**用选择法实现对10个整数按从小到大的顺序排序输出（要求用指针实现）。*/
+//整数型交换
+void swap(int *a, int *b){
+    int tmp = *a;
+    *a = *b;
+    *b = tmp;
 }
 
-/**编写一个函数，使之能完成以下功能：把一个字符串逆序排列。*/
-void char_reverse(char str[]){
-    int s_length = strlen(str);
-    char temp;
-    for(int i=0;i<s_length/2;i++){
-        temp = str[i];
-        str[i] = str[s_length-1-i];
-        str[s_length-1-i] = temp;
+//选择排序
+void selection_sort(int arr[], int n){
+    int i,j,min;
+    for(i=0;i<n-1;i++){
+        min = i;
+        //每一轮对剩下数组进行选择排序
+        for(j=i+1;j<n;j++)  if(arr[j]<arr[min]) min = j;
+        swap(arr[i], arr[min]);
     }
 }
 
-/**编写完整程序：利用 2 个函数对输入的两个分数进行加、减、乘、除四则运 
- * 算和输出用分数表示的结果。（注：输入格式为：%ld/%ld%c%ld/%ld，输出格式 
- * 为%ld/%ld），例如：输 入 1/4+1/3，输出：7/12*/
+/**用冒泡法实现对 10 个整数按从大到小的顺序排序输出（要求用指针实现）。*/
+//冒泡排序
+void bubble_sort(int arr[], int n){
+    int i,j;
 
- long gcd(long a, long b){
-    return b?gcd(b,a%b):a;
- }
-
- void compute(){
-    long a,b,c,d;//example: a/b+c/d
-    char opt;//操作符
-    long e,f;//example: e/f
-    scanf("%ld%ld%c%ld%ld",&a,&b,&opt,&c,&d);
-    switch (opt)
-    {
-    case '+':
-        e = a*d+b*c;
-        f = b*d;
-        break;
-    case '-':
-        e = a*d-b*c;
-        f = b*d;
-        break;
-    case '*':
-        e = a*c;
-        f = b*d;
-        break;
-    case '/':
-        e = a*d;
-        f = b*c;
-        break;
-    default:
-        printf("wrong operator.");
-        return;
-    }
-    //对ef进行化简
-    int gcf = gcd(e,f);
-    e/=gcf; f/=gcf;
-    printf("%ld/%ld",e,f);
- }
-
- /**编一程序，输入月份号，输出该月的英文月名。例如，输入 3，则输出 March， 要求用指针数组处理。*/
- char* int2string(int n){
-    if(n>12 || n<1) return "illegal month";
-    char *calendarMap[] = {"January","February","March","April","May","June","July","August","September","October","November","December"};
-    return calendarMap[n-1];
- }
-
-/**有 n 个人围成一圈，顺序排号。从第一个人开始报数（从 1 到 3 报数），凡 
- * 报到 3 的人退出圈子，问最后留下来的是原来第几号的那位（要求用指针知识实 现）。*/
-int lastRemaining(int n, int Kth){//求数组下标，从0开始，而坐标从1开始，输出后要加1
-    if(n==1) return 0;
-    int x = lastRemaining(n-1, Kth);
-    return (x+Kth)%n;
-}
-//printf("%d",lastRemaining(100,3)+1);
-
-
-/**Eratasthenes筛选法，求出n以内的所有素数*/
-void eratasthenes(int n){
-    int i,j,tmp;
-    int count[MAX]={0};//用count记录，素数为0，合数为1
-    //从2开始直到sqrt(n)循环，从第一个素数开始筛掉它的倍数，接着如此
-    for(i=2;i*i<=n;i++)//对所有可能的正因数进行循环
-        if(!count[i])
-            for(j=2*i;j<=n;j+=i) 
-                count[j]==1;
-    
-    for(i=2;i<=n;i++)
-        if(!count[i])
-            printf("%d ",count[i]);
+    for(i=0;i<n-1;i++)
+        for(j=i;j<n-1;j++)  
+            if(arr[j]>arr[j+1])     
+                swap(arr[j],arr[j+1]);
 }
 
-/**n阶幻方，即一个n*n的矩阵，由1到n^2数字填充，使得每行每列和每个
- * 对角线的和都相同*/
-void magic_squre(int n){
-    int i,j,k;
-    //申请所需二维数组
-    int **arr = (int **)malloc(sizeof(int *)*n);
-    for(i=0;i<n;i++) arr[i] = (int *)malloc(sizeof(int)*n);
-
-    //填充数字,将1放在第一行中间格子，此后将每个数字放在前一个数字的右上格
-    i=n/2,j=0;
-    for(k=1;k<=n*n;k++) arr[(i++)%n][(j--)%n]=k;
-
-    for(i=0;i<n;i++) free(*(arr+i)); //释放
+//辗转相除法求最小公倍数和最大公约数
+int gcd(int a, int b){
+    return b?gcd(b,a%10):a;
+}
+int common(int a,int b){
+    return a*b/gcd(a,b);
 }
 
-/**汉诺塔*/
-//a,b,c分别代表三个柱，该函数的意义在于借助b柱将n个盘从a柱移动到c柱
-void move(int n,int a, int b, int c){
-    if(n==1) printf("%c->%c\n",a,c);
-    else{
-        move(n-1,a,c,b);
-        printf("%c->%c",a,c);
-        move(n-1,b,a,c);
-    }
-}
-void Hanoi(int n){
-    move(n,'a','b','c');
+/**求 5+55+555+5555+55555 的值。（拓展输入一个数 a，求 a+ aa + aaa + aaaa + aaaaa）*/
+int mutiple_plus(int a){
+    int count=0,i;
+    for (i = 1; i <= a; i++) count += i*a*pow(10,a-i);
+    return count;
 }

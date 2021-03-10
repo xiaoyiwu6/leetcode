@@ -3,8 +3,8 @@
 	"tasks": [
 		{
 			"type": "cppbuild",
-			"label": "C/C++: gcc.exe build active file",
-			"command": "C:\\mingw-w64\\x86_64-8.1.0-release-posix-seh-rt_v6-rev0\\mingw64\\bin\\gcc.exe",
+			"label": "C/C++: gcc.exe 生成活动文件",
+			"command": "E:\\Program Files\\x86_64-8.1.0-release-posix-seh-rt_v6-rev0\\mingw64\\bin\\gcc.exe",
 			"args": [
 				"-g",
 				"${workspaceFolder}\\main.c",
@@ -13,7 +13,7 @@
 				"${fileDirname}\\${fileBasenameNoExtension}.exe"
 			],
 			"options": {
-				"cwd": "C:\\mingw-w64\\x86_64-8.1.0-release-posix-seh-rt_v6-rev0\\mingw64\\bin"
+				"cwd": "${workspaceFolder}"
 			},
 			"problemMatcher": [
 				"$gcc"
@@ -22,7 +22,7 @@
 				"kind": "build",
 				"isDefault": true
 			},
-			"detail": "compiler: C:\\mingw-w64\\x86_64-8.1.0-release-posix-seh-rt_v6-rev0\\mingw64\\bin\\gcc.exe"
+			"detail": "编译器: \"E:\\Program Files\\x86_64-8.1.0-release-posix-seh-rt_v6-rev0\\mingw64\\bin\\gcc.exe\""
 		}
 	]
 }
